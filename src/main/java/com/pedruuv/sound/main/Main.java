@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+
+import com.pedruuv.sound.models.Album;
 import com.pedruuv.sound.models.ApiResponse;
 import com.pedruuv.sound.models.Artist;
 import com.pedruuv.sound.models.ArtistData;
@@ -33,6 +35,7 @@ public class Main {
                     1- Search Artist
                     2- Show All Artists
                     3- Search Songs
+                    4- Search Albums
                     0- Exit Application
                     """;
             System.out.println(menu + "\nSelect an option:");
@@ -49,6 +52,9 @@ public class Main {
                 case 3:
                     searchSongsPerArtist();
                     break;
+                case 4:
+                    searchAlbumsPerArtist();
+                    break;
                 case 0:
                     System.out.println("Exiting...");
                     break;
@@ -58,6 +64,31 @@ public class Main {
             }
         }
 
+    }
+
+    private void searchAlbumsPerArtist() {
+        showAllSearchedArtists();
+        System.out.println("Type the artist name:");
+        var nameArtist = scanner.nextLine();
+
+        Optional<Artist> artist = repository.findByNameContainingIgnoreCase(nameArtist);
+
+        if (artist.isPresent()) {
+            var artistFound = artist.get();
+            var json = consume.obterDados(URL + artistFound.getName()
+                    .toLowerCase().replace(" ", "-") + "/index.js");
+
+            ApiResponse albumData = converter.obterDados(json, ApiResponse.class);
+
+            List<Album> albums = albumData.artist().albums().album().stream()
+            .map(a -> new Album(a.title(), a.year())).toList();
+            System.out.println(albums);
+
+            artistFound.setAlbums(albums);
+            repository.save(artistFound);
+        } else{
+            System.out.println("Artist Not Found!");
+        }
     }
 
     private void searchSongsPerArtist() {

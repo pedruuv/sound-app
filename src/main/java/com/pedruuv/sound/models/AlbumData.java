@@ -6,5 +6,5 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record AlbumData(@JsonAlias("item") List<Album> album) {
+public record AlbumData(@JsonAlias("item") List<AlbumDeserialization> album) {
 } 

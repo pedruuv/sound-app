@@ -22,6 +22,18 @@ public class Artist {
     private String name;
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Song> songs;
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Album> albums;
+
+    public List<Album> getAlbums() {
+        return this.albums;
+    }
+
+    public void setAlbums(List<Album> albums) {
+        albums.forEach(a -> a.setArtist(this));
+        this.albums = albums;
+    }
+
 
 
     public Artist(ArtistData artist) {
@@ -46,14 +58,7 @@ public class Artist {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Artist: ").append(name).append("\n");
-        sb.append("Songs:\n");
-        // for (Song song : songs) {
-        //     sb.append(" - ").append(song + "\n");
-        // }
-        // sb.append("Albums:\n");
-        // for (Album album : albums.album()) {
-        //     sb.append(album.title()).append(" - " + album.year() + "\n");
-        // }
+        
         return sb.toString();
     }
 
