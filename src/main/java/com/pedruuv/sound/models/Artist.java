@@ -34,12 +34,9 @@ public class Artist {
         this.albums = albums;
     }
 
-
-
     public Artist(ArtistData artist) {
         this.name = artist.name();
     }
-
 
     public List<Song> getSongs() {
         return this.songs;
@@ -50,16 +47,13 @@ public class Artist {
         this.songs = songs;
     }
 
-
     public Artist() {
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Artist: ").append(name).append("\n");
-        
-        return sb.toString();
+        return "-------------------------------\n" + "Artist: " + this.name + "\nSongs: "
+                + this.songs + "\nAlbums: " + this.albums + "-------------------------------\n";
     }
 
     public Long getId() {

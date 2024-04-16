@@ -36,6 +36,7 @@ public class Main {
                     2- Show All Artists
                     3- Search Songs
                     4- Search Albums
+                    5- Search Songs By Word
                     0- Exit Application
                     """;
             System.out.println(menu + "\nSelect an option:");
@@ -55,6 +56,9 @@ public class Main {
                 case 4:
                     searchAlbumsPerArtist();
                     break;
+                case 5:
+                    searchSongsByWord();
+                    break;
                 case 0:
                     System.out.println("Exiting...");
                     break;
@@ -64,6 +68,15 @@ public class Main {
             }
         }
 
+    }
+
+    private void searchSongsByWord() {
+        System.out.println("Type some word to search:");
+        var songWord = scanner.nextLine();
+
+        List<Song> songsFound = repository.songsByWord(songWord);
+        songsFound.forEach(s -> System.out.printf("Song: %s - Artist: %s\n",
+                s.getTitle(), s.getArtist().getName() ));
     }
 
     private void searchAlbumsPerArtist() {
@@ -81,12 +94,12 @@ public class Main {
             ApiResponse albumData = converter.obterDados(json, ApiResponse.class);
 
             List<Album> albums = albumData.artist().albums().album().stream()
-            .map(a -> new Album(a.title(), a.year())).toList();
+                    .map(a -> new Album(a.title(), a.year())).toList();
             System.out.println(albums);
 
             artistFound.setAlbums(albums);
             repository.save(artistFound);
-        } else{
+        } else {
             System.out.println("Artist Not Found!");
         }
     }
