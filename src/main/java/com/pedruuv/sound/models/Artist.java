@@ -20,6 +20,7 @@ public class Artist {
     private Long id;
     @Column(unique = true)
     private String name;
+    private String genre;
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Song> songs;
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -27,6 +28,14 @@ public class Artist {
 
     public List<Album> getAlbums() {
         return this.albums;
+    }
+
+    public String getGenre() {
+        return this.genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public void setAlbums(List<Album> albums) {
@@ -52,8 +61,9 @@ public class Artist {
 
     @Override
     public String toString() {
-        return "-------------------------------\n" + "Artist: " + this.name + "\nSongs: "
-                + this.songs + "\nAlbums: " + this.albums + "-------------------------------\n";
+        return "-------------------------------\n" + "Artist: " + this.name + "\nGenre: " + this.genre +
+                "\nSongs: "+ this.songs + "\nAlbums: " 
+                + this.albums + "-------------------------------\n";
     }
 
     public Long getId() {

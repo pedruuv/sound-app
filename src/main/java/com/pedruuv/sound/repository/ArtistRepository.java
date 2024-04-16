@@ -13,6 +13,8 @@ import com.pedruuv.sound.models.Song;
 public interface ArtistRepository extends JpaRepository<Artist, Long>{
     Optional<Artist> findByNameContainingIgnoreCase(String name);
 
+    List<Artist> findByGenreContainingIgnoreCase(String nameGenre);
+
     @Query("select s from Artist a JOIN a.songs s WHERE s.title ILIKE %:songWord%")
     List<Song> songsByWord(String songWord);
 

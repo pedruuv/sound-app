@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import com.pedruuv.sound.models.Album;
 import com.pedruuv.sound.models.ApiResponse;
 import com.pedruuv.sound.models.Artist;
 import com.pedruuv.sound.models.ArtistData;
+import com.pedruuv.sound.models.GenreData;
 import com.pedruuv.sound.models.Song;
 import com.pedruuv.sound.repository.ArtistRepository;
 import com.pedruuv.sound.service.ApiConsume;
@@ -37,6 +39,7 @@ public class Main {
                     3- Search Songs
                     4- Search Albums
                     5- Search Songs By Word
+                    6- Search By Genre
                     0- Exit Application
                     """;
             System.out.println(menu + "\nSelect an option:");
@@ -59,6 +62,9 @@ public class Main {
                 case 5:
                     searchSongsByWord();
                     break;
+                case 6:
+                    searchByGenre();
+                    break;
                 case 0:
                     System.out.println("Exiting...");
                     break;
@@ -70,13 +76,22 @@ public class Main {
 
     }
 
+    private void searchByGenre() {
+        System.out.println("Type the Genre to search: ");
+        var genre = scanner.nextLine();
+
+        List<Artist> artistsFound = repository.findByGenreContainingIgnoreCase(genre);
+        System.out.println("Artists of the genre " + genre + ":\n");
+        artistsFound.forEach(System.out::println);
+    }
+
     private void searchSongsByWord() {
         System.out.println("Type some word to search:");
         var songWord = scanner.nextLine();
 
         List<Song> songsFound = repository.songsByWord(songWord);
         songsFound.forEach(s -> System.out.printf("Song: %s - Artist: %s\n",
-                s.getTitle(), s.getArtist().getName() ));
+                s.getTitle(), s.getArtist().getName()));
     }
 
     private void searchAlbumsPerArtist() {
@@ -135,7 +150,9 @@ public class Main {
 
     private void searchArtist() {
         ArtistData data = getArtistData();
+        String genre = data.genres().stream().map(GenreData::name).collect(Collectors.joining(", "));
         Artist artist = new Artist(data);
+        artist.setGenre(genre);
         repository.save(artist);
     }
 
